@@ -363,8 +363,7 @@ class PdfTools(tk.Frame):
               , 'rotate1' : self.rotation[0]
               , 'rotate2' : self.rotation[1]
               , 'clobber' : self.overwrite1.get()}
-        self.Co.validate_inputs(**args)
-        if self.Co.combine():
+        if self.Co.validate_inputs(**args) and self.Co.combine():
             mb.showinfo(title=None, message="Created " + self.Co.get_ofile())
         else:
             print(self.Co.status())
@@ -376,8 +375,7 @@ class PdfTools(tk.Frame):
         self.set_reorder_text('')
         args = {'inpath' : self.file3,
                 'pages'  : self.reorder_pages}
-        self.Re.validate_inputs(**args)
-        if self.Re.process():
+        if self.Re.validate_inputs(**args) and self.Re.process():
             mb.showinfo(title=None, message="Created " + self.Re.get_ofile())
         else:
             mb.showinfo(title=None, message=self.Re.status())
@@ -391,8 +389,7 @@ class PdfTools(tk.Frame):
         args = {'inpath'   : self.file4,
                 'pages'    : self.rotate_pages,
                 'rotation' : self.rotate}
-        self.Ro.validate_inputs(**args)
-        if self.Ro.process():
+        if self.Ro.validate_inputs(**args) and self.Ro.process():
             mb.showinfo(title=None, message="Created " + self.Ro.get_ofile())
         else:
             mb.showinfo(title=None, message=self.Ro.status())

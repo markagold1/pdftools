@@ -28,7 +28,7 @@ def pages(pageString, N):
         if '-' in item:
             l = item.split('-')
             if len(l) > 2:
-                print('More than 1 dash not allowd in page range')
+                print('More than 1 dash not allowed in page range')
                 continue
             if (not l[0].isnumeric()) or (not l[1].isnumeric()):
                 print('Non-numeric page not allowed')
