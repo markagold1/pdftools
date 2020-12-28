@@ -14,9 +14,9 @@
         --inpath2     Path and file name of second input PDF file
 
         --rotate1     Optional rotation applied to all pages of file1
-                      CW = 90° clockwise
-                      CCW = 90° counter-clockwise
-                      FV = 180° flip vertically
+                      CW = 90 degrees clockwise
+                      CCW = 90 degrees counter-clockwise
+                      FV = 180 degrees flip vertically
 
         --rotate2     Optional rotation applied to all pages of file2
 
@@ -34,7 +34,7 @@
          python pdfcombine.py --inpath1 doc1.pdf --inpath2 doc2.pdf
 
 
-      Combine doc1.pdf and doc2.pdf. Rotate doc1.pdf 90° clockwise
+      Combine doc1.pdf and doc2.pdf. Rotate doc1.pdf 90 degrees clockwise
 
          python pdfcombine.py --inpath1 doc.pdf --inpath2 doc2.pdf -rotate1 CW
 
