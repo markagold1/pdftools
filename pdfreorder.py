@@ -14,24 +14,25 @@
 
         --inpath      Path and file name of input PDF file
 
-    The string "_reoder" is appended to the output file name before the extension.
-    The output file is placed in the same directory as the input file
+    The output file name is derived from the input file name by appending the
+    string "_reoder" to the input file name before the extension. The output
+    file is placed in the same directory as the input file.
 
     Examples: 
 
           Swap the first two pages of 10 page document doc.pdf
 
-              python pdfreorder.py --pages "2, 1, 3-10" doc.pdf
+              python pdfreorder.py --pages "2, 1, 3-10" --inpath doc.pdf
 
 
           Reverse the order of pages in 10 page document doc.pdf
 
-              python pdfreorder.py --pages "10-1" doc.pdf
+              python pdfreorder.py --pages "10-1" --inpath doc.pdf
 
 
           Extract page 5 of doc.pdf, which has at least 5 pages
 
-              python pdfreorder.py --pages "5" doc.pdf
+              python pdfreorder.py --pages "5" --inpath doc.pdf
 
 """
 import argparse
@@ -47,7 +48,7 @@ def parse_args():
 
 
 class PdfReorderer:
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.ofile = None
         self.msg = ''
 
@@ -106,9 +107,6 @@ class PdfReorderer:
 
 if __name__ == "__main__":
     args = parse_args()
-    R = PdfReorderer(**vars(args))
-    if R.validate_inputs(**vars(args)):
-        if not R.process():
-            print(R.status())
-    else:
+    R = PdfReorderer()
+    if not (R.validate_inputs(**vars(args)) and R.process()):
         print(R.status())

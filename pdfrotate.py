@@ -19,8 +19,13 @@
 
         --inpath      Path and file name of input PDF file
 
-    The string "_rot" is appended to the output file name before the extension.
-    The output file is placed in the same directory as the input file
+    The output file name is derived from the input file name by appending the
+    string "_rot" to the input file name before the extension. The output
+    file is placed in the same directory as the input file.
+
+    Example: Rotate the first four pages of doc.pdf
+
+              python pdfrotate.py --pages "1-4" --inpath doc.pdf
 
 """
 import argparse
@@ -37,7 +42,7 @@ def parse_args():
 
 
 class PdfRotator:
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.ofile = None
         self.msg = ''
         degree_sign= u'\N{DEGREE SIGN}'
@@ -100,8 +105,6 @@ class PdfRotator:
 
 if __name__ == "__main__":
     args = parse_args()
-    R = PdfRotator(**vars(args))
-    if R.validate_inputs(**vars(args)):
-        R.process()
-    else:
+    R = PdfRotator()
+    if not (R.validate_inputs(**vars(args)) and R.process()):
         print(R.status())

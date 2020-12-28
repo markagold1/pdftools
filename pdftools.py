@@ -363,7 +363,7 @@ class PdfTools(tk.Frame):
               , 'rotate1' : self.rotation[0]
               , 'rotate2' : self.rotation[1]
               , 'clobber' : self.overwrite1.get()}
-        if self.Co.validate_inputs(**args) and self.Co.combine():
+        if self.Co.validate_inputs(**args) and self.Co.process():
             mb.showinfo(title=None, message="Created " + self.Co.get_ofile())
         else:
             print(self.Co.status())

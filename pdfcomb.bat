@@ -1,2 +1,2 @@
-C:\Users\mark\anaconda3\python Z:\src\py\pdftools\pdftools.py
+C:\Users\mark\anaconda3\python Z:\src\github\pdftools\pdftools.py
 exit

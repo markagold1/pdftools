@@ -1,3 +1,6 @@
+"""
+    Helper utilities for PDFtools
+"""
 import PyPDF2 
 
 def ispdf(pathfile):
@@ -50,7 +53,7 @@ def pages(pageString, N):
                 print('Non-numeric page not allowed')
                 continue
             pg = int(item) - 1 # zero-based
-            if pg < N  and  pg >= 0:
-                pageRange.append(int(item)-1)
+            if pg in range(0, N):
+                pageRange.append(pg)
     return pageRange
 
