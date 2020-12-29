@@ -1,4 +1,4 @@
-﻿Merge, reorder, rotate, and extract pages from PDF files
+﻿Merge, reorder, rotate, and extract pages from PDF files.
 
 ![pdftools.png](images/pdftools.png)
 
@@ -11,8 +11,9 @@ In this repository you'll find:
 * .bat file for desktop shortcut
 
 # Requires
-* PyPDF2 version 1.26.0 or newer (pip install PyPDF2)
-* python version 3.6 or newer (which includes tkinter)
+* python version 3.6 or newer
+* PyPDF2 version 1.26.0 or newer
+* tkinter version 8.6 or newer
 
 # Usage
 * python pdftools.py
@@ -22,5 +23,8 @@ In this repository you'll find:
 * pdfreorder.py - Reorder pages of a PDF file
 * pdfrotate.py  - Rotate pages of a PDF file
 * pdftools.py   - Simple GUI wrapping the utilities
+
+# Compatibility
+PDFtools has been tested on Windows 10 and Ubuntu 20.04.
 
 > Written with [StackEdit](https://stackedit.io/).
