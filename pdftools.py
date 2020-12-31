@@ -15,11 +15,13 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd 
 from tkinter import messagebox as mb
+from tkinter import scrolledtext as st
 import PyPDF2 
 import os
 import pdfcombine as comb
 import pdfreorder as reorder
 import pdfrotate as rotator
+import pdfinfo as pdfinfo
 import pdftools_utils as pu
 
 openString = 'Click to open file '
@@ -67,9 +69,11 @@ class PdfTools(tk.Frame):
         self.init_combiner_gui()
         self.init_reorderer_gui()
         self.init_rotator_gui()
+        self.init_info_gui()
         self.Co = comb.PdfCombiner()
         self.Re = reorder.PdfReorderer()
         self.Ro = rotator.PdfRotator()
+        self.Pi = pdfinfo.PdfInfo()
 
         # Setup notebook, style
         customed_style = ttk.Style()
@@ -80,15 +84,18 @@ class PdfTools(tk.Frame):
         self.tab1 = ttk.Frame(self.notebook)
         self.tab2 = ttk.Frame(self.notebook)
         self.tab3 = ttk.Frame(self.notebook)
+        self.tab4 = ttk.Frame(self.notebook)
         self.notebook.add(self.tab1, text="Combine")
         self.notebook.add(self.tab2, text="Reorder")
         self.notebook.add(self.tab3, text="Rotate")
+        self.notebook.add(self.tab4, text="Info")
         self.notebook.grid(row=0, column=0)
 
         # Populate widgets
         self.create_widgets_tab1()
         self.create_widgets_tab2()
         self.create_widgets_tab3()
+        self.create_widgets_tab4()
 
     def create_widgets_tab1(self):
         ''''
@@ -201,7 +208,7 @@ class PdfTools(tk.Frame):
         self.FileButton4.config(font=("TkDefaultFont", 12))
         self.FileButton4.pack(side='top', fill='both', expand=True)
 
-        # Fill some space
+        # Label to dispay number of pages in document
         self.npagelabel2 = tk.Label(self.tab3, text = ' ')
         self.npagelabel2.config(font=("TkDefaultFont", 10))
         self.npagelabel2.pack(fill='both', expand=True)
@@ -217,11 +224,6 @@ class PdfTools(tk.Frame):
         self.entry2 = tk.Entry(self.tab3, textvariable=self.rotate_pages)
         self.entry2.config(font=("TkDefaultFont", 12))
         self.entry2.pack(fill='both', expand=True)
-
-        # Fill some space
-        #self.dummylabel3 = tk.Label(self.tab3, text = ' ')
-        #self.dummylabel3.config(font=("TkDefaultFont", 5))
-        #self.dummylabel3.pack(fill=tk.X, expand=True)
 
         # Rotation dropdown
         self.v3 = tk.StringVar()
@@ -244,6 +246,26 @@ class PdfTools(tk.Frame):
                              , fill=tk.X
                              , expand=True)
 
+    def create_widgets_tab4(self):
+        ''''
+        Place widgets for Info applet
+        '''
+        # File selection button
+        self.FileButton5 = tk.Button(self.tab4
+                                   , text=openString
+                                   , activebackground='red'
+                                   , command=self.setfile5)
+        self.FileButton5.config(font=("TkDefaultFont", 10))
+        self.FileButton5.pack(side='top', fill='both', expand=True)
+
+        # Scrolled text box
+        self.textArea1 = st.ScrolledText(self.tab4
+                                       , wrap = tk.WORD
+                                       , width = 27
+                                       , height = 9
+                                       , font = ("TkDefaultFont", 10))
+        self.textArea1.pack(side='top', fill=tk.X, expand=True)
+
     def init_combiner_gui(self):
         self.file1 = None
         self.file2 = None
@@ -259,6 +281,11 @@ class PdfTools(tk.Frame):
     def init_rotator_gui(self):
         self.defdir4 = get_default_dir()
         self.rotate = 'NONE'
+
+    def init_info_gui(self):
+        self.defdir5 = get_default_dir()
+        self.mru_file = None
+        self.mru_dir = self.defdir5
 
     def setrot(self, choice, value):
         '''
@@ -296,6 +323,7 @@ class PdfTools(tk.Frame):
             self.FileButton1["text"] = self.file1
             self.FileButton1["bg"] = "yellow"
             self.defdir1 = os.path.split(self.file1)[0]
+            self.updateMostRecentFile(self.file1)
             print("file 1 is " + self.file1)
 
     def setfile2(self):
@@ -308,6 +336,7 @@ class PdfTools(tk.Frame):
             self.FileButton2["text"] = self.file2
             self.FileButton2["bg"] = "yellow"
             self.defdir2 = os.path.split(self.file2)[0]
+            self.updateMostRecentFile(self.file2)
             print("file 2 is " + self.file2)
 
     def setfile3(self):
@@ -323,6 +352,7 @@ class PdfTools(tk.Frame):
             N = pu.getNumPages(self.file3)
             displayPages= 'Document contains {0} pages'.format(N)
             self.npagelabel1["text"] = displayPages
+            self.updateMostRecentFile(self.file2)
             print("file 3 is " + self.file3)
 
     def setfile4(self):
@@ -338,7 +368,31 @@ class PdfTools(tk.Frame):
             N = pu.getNumPages(self.file4)
             displayPages= 'Document contains {0} pages'.format(N)
             self.npagelabel2["text"] = displayPages
+            self.updateMostRecentFile(self.file4)
             print("file 4 is " + self.file4)
+
+    def setfile5(self):
+        '''
+        Setup file input for PDF info
+        '''
+        self.file5= fd.askopenfilename(initialdir=self.mru_dir,
+          filetypes=[("PDF Files", "*.pdf"), ("All Files", "*.*")])
+        if self.file5:
+            self.updateMostRecentFile(self.file5)
+            print("file 5 is " + self.file5)
+
+    def updateMostRecentFile(self, pathfilename):
+        '''
+        Update the most recently selected file
+        for displaying file info
+        '''
+        self.mru_file = pathfilename
+        self.mru_dir = os.path.split(self.mru_file)[0]
+        # Update button label on the Info tab
+        self.FileButton5["text"] = pathfilename
+        self.FileButton5["bg"] = "yellow"
+        self.defdir5 = os.path.split(pathfilename)[0]
+        self.do_info()
 
     def set_reorder_text(self, dummy):
         '''
@@ -366,6 +420,7 @@ class PdfTools(tk.Frame):
         if self.Co.validate_inputs(**args) and self.Co.process():
             mb.showinfo(title=None, message="Created " + self.Co.get_ofile())
         else:
+            mb.showinfo(title=None, message=self.Co.status())
             print(self.Co.status())
 
     def do_reorder(self):
@@ -394,6 +449,20 @@ class PdfTools(tk.Frame):
         else:
             mb.showinfo(title=None, message=self.Ro.status())
             print(self.Ro.status())
+
+    def do_info(self):
+        '''
+        Setup inputs and call PDF file info
+        '''
+        args = {'inpath' : self.mru_file,}
+        if self.Pi.validate_inputs(**args) and self.Pi.process():
+            self.textArea1.configure(state ='normal')
+            self.textArea1.delete('1.0', tk.END)
+            self.textArea1.insert(tk.INSERT, self.Pi.get_doc_info())
+            self.textArea1.configure(state ='disabled')
+        else:
+            mb.showinfo(title=None, message=self.Pi.status())
+            print(self.Pi.status())
 
 
 root = tk.Tk()

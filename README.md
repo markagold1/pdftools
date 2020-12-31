@@ -1,4 +1,4 @@
-﻿Merge, reorder, rotate, and extract pages from PDF files.
+﻿Merge, reorder, rotate, extract pages and display document information about PDF files.
 
 ![pdftools.png](images/pdftools.png)
 
@@ -22,6 +22,7 @@ In this repository you'll find:
 * pdfcombine.py - Merge PDF files
 * pdfreorder.py - Reorder pages of a PDF file
 * pdfrotate.py  - Rotate pages of a PDF file
+* pdfinfo.py    - Display document info
 * pdftools.py   - Simple GUI wrapping the utilities
 
 # Compatibility
