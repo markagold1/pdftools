@@ -68,21 +68,21 @@ class PdfCombiner():
 
     def validate_inputs(self, **kwargs):
         self.args_d = kwargs
-        if not os.path.isfile(self.args_d['inpath1']):
-            ok = False
-            self.msg = 'Cannot find input file {0}'.format(self.args_d['inpath1'])
-        elif not pu.ispdf(self.args_d['inpath1']):
-            ok = False
-            self.msg = '{0} does not look like a valid PDF.'.format(self.args_d['inpath1'])
-        elif not os.path.isfile(self.args_d['inpath2']):
-            ok = False
-            self.msg = 'Cannot find input file {0}'.format(self.args_d['inpath2'])
-        elif not pu.ispdf(self.args_d['inpath2']):
-            ok = False
-            self.msg = '{0} does not look like a valid PDF.'.format(self.args_d['inpath2'])
-        else:
-            ok = True
-            self.msg = 'Inputs validated'
+        for infile in ['inpath1', 'inpath2']:
+            if not os.path.isfile(self.args_d[infile]):
+                ok = False
+                self.msg = 'Cannot find input file {0}'.format(self.args_d[infile])
+            elif not pu.ispdf(self.args_d[infile]):
+                ok = False
+                self.msg = '{0} does not look like a valid PDF.'.format(self.args_d[infile])
+            elif pu.isRestricted(self.args_d[infile]):
+                ok = False
+                self.msg = 'File is restricted:\n {0}'.format(self.args_d[infile])
+            else:
+                ok = True
+                self.msg = 'Inputs validated'
+            if not ok:
+                break
         self.rotate1  = self.args_d['rotate1'].upper()
         self.rotate2  = self.args_d['rotate2'].upper()
         self.file1    = self.args_d['inpath1']

@@ -64,6 +64,9 @@ class PdfRotator:
         elif not pu.ispdf(self.args_d['inpath']):
             ok = False
             self.msg = '{0} does not look like a valid PDF.'.format(self.args_d['inpath'])
+        elif pu.isRestricted(self.args_d['inpath']):
+            ok = False
+            self.msg = 'File is restricted:\n {0}'.format(self.args_d['inpath'])
         else:
             ok = True
             self.args_d['rotation'] = self.args_d['rotation'].upper()

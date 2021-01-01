@@ -255,7 +255,7 @@ class PdfTools(tk.Frame):
                                    , text=openString
                                    , activebackground='red'
                                    , command=self.setfile5)
-        self.FileButton5.config(font=("TkDefaultFont", 10))
+        self.FileButton5.config(font=("TkDefaultFont", 12))
         self.FileButton5.pack(side='top', fill='both', expand=True)
 
         # Scrolled text box
@@ -352,7 +352,7 @@ class PdfTools(tk.Frame):
             N = pu.getNumPages(self.file3)
             displayPages= 'Document contains {0} pages'.format(N)
             self.npagelabel1["text"] = displayPages
-            self.updateMostRecentFile(self.file2)
+            self.updateMostRecentFile(self.file3)
             print("file 3 is " + self.file3)
 
     def setfile4(self):
@@ -455,14 +455,14 @@ class PdfTools(tk.Frame):
         Setup inputs and call PDF file info
         '''
         args = {'inpath' : self.mru_file,}
+        self.textArea1.configure(state ='normal')
+        self.textArea1.delete('1.0', tk.END)
         if self.Pi.validate_inputs(**args) and self.Pi.process():
-            self.textArea1.configure(state ='normal')
-            self.textArea1.delete('1.0', tk.END)
             self.textArea1.insert(tk.INSERT, self.Pi.get_doc_info())
-            self.textArea1.configure(state ='disabled')
         else:
-            mb.showinfo(title=None, message=self.Pi.status())
+            self.textArea1.insert(tk.INSERT, '\n' + self.Pi.status())
             print(self.Pi.status())
+        self.textArea1.configure(state ='disabled')
 
 
 root = tk.Tk()

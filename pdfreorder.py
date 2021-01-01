@@ -66,6 +66,9 @@ class PdfReorderer:
             ok = False
             s = '{0} does not look like a valid PDF.'
             self.msg = s.format(self.args_d['inpath'])
+        elif pu.isRestricted(self.args_d['inpath']):
+            ok = False
+            self.msg = 'File is restricted:\n {0}'.format(self.args_d['inpath'])
         elif not pu.pages(self.args_d['pages']
                         , pu.getNumPages(self.args_d['inpath'])):
             ok = False

@@ -21,7 +21,9 @@ import pdftools_utils as pu
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--inpath',   help='Input path/file',  type=str, default = '')
+    parser.add_argument('-i', '--inpath'
+                      , help='Input path/file'
+                      , type=str, default = '')
     return parser.parse_args()
 
 
@@ -43,6 +45,9 @@ class PdfInfo:
         elif not pu.ispdf(self.args_d['inpath']):
             ok = False
             self.msg = '{0} does not look like a valid PDF.'.format(self.args_d['inpath'])
+        elif pu.isRestricted(self.args_d['inpath']):
+            ok = False
+            self.msg = 'File is restricted:\n {0}'.format(self.args_d['inpath'])
         else:
             ok = True
             self.msg = 'Inputs validated'
@@ -59,14 +64,21 @@ class PdfInfo:
         Main processing core.
         Retrieve document info
         """
-        with open(self.args_d['inpath'], 'rb') as fr:
-            Reader = PyPDF2.PdfFileReader(fr)
-            info = Reader.getDocumentInfo()
-            self.doc_info = 'Pages: {0}'.format(Reader.numPages) + '\n'
-            for item in info:
-                self.doc_info += '{0} = {1}'.format(item[1:], info[item]) + '\n'
-            self.doc_info = self.doc_info[:-1]
-        return True
+        ok = True
+        try:
+            with open(self.args_d['inpath'], 'rb') as fr:
+                Reader = PyPDF2.PdfFileReader(fr)
+                if Reader.isEncrypted:
+                    Reader.decrypt('')
+                info = Reader.getDocumentInfo()
+                self.doc_info = 'Pages: {0}'.format(Reader.numPages) + '\n'
+                for item in info:
+                    self.doc_info += '{0} = {1}'.format(item[1:], info[item]) + '\n'
+                self.doc_info = self.doc_info[:-1]
+        except Exception:
+            # no msg update, errors already caught in validate()
+            ok = False
+        return ok
 
 
 if __name__ == "__main__":

@@ -6,17 +6,17 @@ import PyPDF2
 def ispdf(pathfile):
     try:
         with open(pathfile, "rb") as fh:
-            reader = PyPDF2.PdfFileReader(fh)
+            Reader = PyPDF2.PdfFileReader(fh)
         return True  # PDF file
     except PyPDF2.utils.PdfReadError:
         return False  # not a PDF file
 
 def getNumPages(pathfile):
     N = 0
-    if ispdf(pathfile):
+    if ispdf(pathfile) and not isRestricted(pathfile):
         with open(pathfile, "rb") as fh:
-            reader = PyPDF2.PdfFileReader(fh)
-            N = reader.numPages
+            Reader = PyPDF2.PdfFileReader(fh)
+            N = Reader.numPages
     return N
 
 def pages(pageString, N):
@@ -57,3 +57,18 @@ def pages(pageString, N):
                 pageRange.append(pg)
     return pageRange
 
+def isRestricted(pathfile):
+    '''
+    Return true if file is not decryptable (eg. file is restricted).
+    '''
+    restricted = False
+    with open(pathfile, "rb") as fh:
+        Reader = PyPDF2.PdfFileReader(fh)
+        if Reader.isEncrypted:
+            try:
+                Reader.decrypt('')
+            except NotImplementedError:
+                restricted = True
+            except Exception:
+                restricted = True
+    return restricted
